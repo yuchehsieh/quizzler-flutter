@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'question.dart';
+import 'quiz_brain.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(Quizzler());
 
@@ -30,37 +32,10 @@ class _QuizPageState extends State<QuizPage> {
 
   List<Icon> _scoreKeeper = [];
 
-//  List<String> _questions = [
-//    'You can lead a cow down stairs but not up stairs.',
-//    'Approximately one quarter of human bones are in the feet.',
-//    'A slug\'s blood is green.'
-//  ];
-//
-//  List<bool> _answers = [
-//    false,
-//    true,
-//    true,
-//  ];
-
-  List<Question> _questions = [
-    Question(
-      q: 'You can lead a cow down stairs but not up stairs.',
-      a: false,
-    ),
-    Question(
-      q: 'Approximately one quarter of human bones are in the feet.',
-      a: true,
-    ),
-    Question(
-      q: 'A slug\'s blood is green.',
-      a: true,
-    ),
-  ];
-
   void _onAnswerQuestion(bool userAnswer) {
     final bool currentAnswer =
-        _questions[_questionNumber].questionAnswer == userAnswer;
-    if (_questionNumber == _questions.length - 1) {
+        quizBrain.questionBank[_questionNumber].questionAnswer == userAnswer;
+    if (_questionNumber == quizBrain.questionBank.length - 1) {
       if (currentAnswer) {
         setState(() {
           _questionNumber = 0;
@@ -119,7 +94,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                _questions[_questionNumber].questionText,
+                quizBrain.questionBank[_questionNumber].questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
