@@ -28,57 +28,31 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  int _questionNumber = 0;
-
   List<Icon> _scoreKeeper = [];
 
   void _onAnswerQuestion(bool userAnswer) {
-    final bool currentAnswer =
-        quizBrain.questionBank[_questionNumber].questionAnswer == userAnswer;
-    if (_questionNumber == quizBrain.questionBank.length - 1) {
-      if (currentAnswer) {
-        setState(() {
-          _questionNumber = 0;
-          _scoreKeeper.add(
-            Icon(
-              Icons.check,
-              color: Colors.green,
-            ),
-          );
-        });
-      } else {
-        setState(() {
-          _questionNumber = 0;
-          _scoreKeeper.add(
-            Icon(
-              Icons.close,
-              color: Colors.red,
-            ),
-          );
-        });
-      }
+    final bool isAnswerCorrect = quizBrain.getCorrectAnswer() == userAnswer;
+
+    if (isAnswerCorrect) {
+      setState(() {
+        quizBrain.nextQuestion();
+        _scoreKeeper.add(
+          Icon(
+            Icons.check,
+            color: Colors.green,
+          ),
+        );
+      });
     } else {
-      if (currentAnswer) {
-        setState(() {
-          _questionNumber++;
-          _scoreKeeper.add(
-            Icon(
-              Icons.check,
-              color: Colors.green,
-            ),
-          );
-        });
-      } else {
-        setState(() {
-          _questionNumber++;
-          _scoreKeeper.add(
-            Icon(
-              Icons.close,
-              color: Colors.red,
-            ),
-          );
-        });
-      }
+      setState(() {
+        quizBrain.nextQuestion();
+        _scoreKeeper.add(
+          Icon(
+            Icons.close,
+            color: Colors.red,
+          ),
+        );
+      });
     }
   }
 
@@ -94,7 +68,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                quizBrain.questionBank[_questionNumber].questionText,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
