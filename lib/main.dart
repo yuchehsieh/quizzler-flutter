@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'question.dart';
 
 void main() => runApp(Quizzler());
 
@@ -25,6 +26,87 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  int _questionNumber = 0;
+
+  List<Icon> _scoreKeeper = [];
+
+//  List<String> _questions = [
+//    'You can lead a cow down stairs but not up stairs.',
+//    'Approximately one quarter of human bones are in the feet.',
+//    'A slug\'s blood is green.'
+//  ];
+//
+//  List<bool> _answers = [
+//    false,
+//    true,
+//    true,
+//  ];
+
+  List<Question> _questions = [
+    Question(
+      q: 'You can lead a cow down stairs but not up stairs.',
+      a: false,
+    ),
+    Question(
+      q: 'Approximately one quarter of human bones are in the feet.',
+      a: true,
+    ),
+    Question(
+      q: 'A slug\'s blood is green.',
+      a: true,
+    ),
+  ];
+
+  void _onAnswerQuestion(bool userAnswer) {
+    final bool currentAnswer =
+        _questions[_questionNumber].questionAnswer == userAnswer;
+    if (_questionNumber == _questions.length - 1) {
+      if (currentAnswer) {
+        setState(() {
+          _questionNumber = 0;
+          _scoreKeeper.add(
+            Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+          );
+        });
+      } else {
+        setState(() {
+          _questionNumber = 0;
+          _scoreKeeper.add(
+            Icon(
+              Icons.close,
+              color: Colors.red,
+            ),
+          );
+        });
+      }
+    } else {
+      if (currentAnswer) {
+        setState(() {
+          _questionNumber++;
+          _scoreKeeper.add(
+            Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+          );
+        });
+      } else {
+        setState(() {
+          _questionNumber++;
+          _scoreKeeper.add(
+            Icon(
+              Icons.close,
+              color: Colors.red,
+            ),
+          );
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,7 +119,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                _questions[_questionNumber].questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -60,9 +142,7 @@ class _QuizPageState extends State<QuizPage> {
                   fontSize: 20.0,
                 ),
               ),
-              onPressed: () {
-                //The user picked true.
-              },
+              onPressed: () => _onAnswerQuestion(true),
             ),
           ),
         ),
@@ -78,13 +158,13 @@ class _QuizPageState extends State<QuizPage> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: () {
-                //The user picked false.
-              },
+              onPressed: () => _onAnswerQuestion(false),
             ),
           ),
         ),
-        //TODO: Add a Row here as your score keeper
+        Row(
+          children: _scoreKeeper,
+        )
       ],
     );
   }
