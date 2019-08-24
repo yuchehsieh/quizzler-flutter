@@ -36,6 +36,14 @@ class QuizBrain {
     }
   }
 
+  void resetQuestions() {
+    _questionNumber = 0;
+  }
+
+  bool isReachedEndQuestion() {
+    return _questionNumber == _questionBank.length - 1;
+  }
+
   String getQuestionText() {
     return _questionBank[_questionNumber].questionText;
   }

@@ -33,27 +33,51 @@ class _QuizPageState extends State<QuizPage> {
   void _onAnswerQuestion(bool userAnswer) {
     final bool isAnswerCorrect = quizBrain.getCorrectAnswer() == userAnswer;
 
-    if (isAnswerCorrect) {
-      setState(() {
-        quizBrain.nextQuestion();
-        _scoreKeeper.add(
-          Icon(
-            Icons.check,
-            color: Colors.green,
-          ),
-        );
-      });
+    if (quizBrain.isReachedEndQuestion()) {
+      showResetAlert();
     } else {
       setState(() {
+        if (isAnswerCorrect) {
+          _scoreKeeper.add(
+            Icon(
+              Icons.check,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          _scoreKeeper.add(
+            Icon(
+              Icons.close,
+              color: Colors.red,
+            ),
+          );
+        }
+
         quizBrain.nextQuestion();
-        _scoreKeeper.add(
-          Icon(
-            Icons.close,
-            color: Colors.red,
-          ),
-        );
       });
     }
+  }
+
+  void showResetAlert() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Congratulation!'),
+        content: Text('you have finished the test'),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('RETEST'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              quizBrain.resetQuestions();
+              setState(() {
+                _scoreKeeper = [];
+              });
+            },
+          )
+        ],
+      ),
+    );
   }
 
   @override
